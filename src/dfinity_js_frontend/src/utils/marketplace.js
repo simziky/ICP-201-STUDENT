@@ -1,8 +1,8 @@
 import { Principal } from "@dfinity/principal";
 import { transferICP } from "./ledger";
 
-export async function createProduct(product) {
-  return window.canister.marketplace.addProduct(product);
+export async function createStudent(Student) {
+  return window.canister.marketplace.createStudent(Student);
 }
 
 export async function getProducts() {

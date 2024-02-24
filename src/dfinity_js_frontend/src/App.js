@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Container, Nav } from "react-bootstrap";
-import Products from "./components/marketplace/Products";
+import Products from "./components/marketplace/StudentList";
 import "./App.css";
 import Wallet from "./components/Wallet";
 import coverImg from "./assets/img/sandwich.jpg";
