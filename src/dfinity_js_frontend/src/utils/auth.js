@@ -1,8 +1,8 @@
 import { AuthClient } from "@dfinity/auth-client";
 
 // that is the url of the webapp for the internet identity. 
-const IDENTITY_PROVIDER = window.location.origin + `/?canisterId=bd3sg-teaaa-aaaaa-qaaba-cai#authorize`;
-const MAX_TTL = 7 * 24 * 60 * 60 * 1000 * 1000 * 1000;
+const IDENTITY_PROVIDER = window.location.origin + `/?canisterId=br5f7-7uaaa-aaaaa-qaaca-cai#authorize`;
+const MAX_TTL = 7 * 24 * 60 * 60 * 1000 * 1000 * 1000; 
 
 export async function getAuthClient() {
     return await AuthClient.create();

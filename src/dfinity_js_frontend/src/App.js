@@ -29,7 +29,7 @@ const App = function AppWrapper() {
   return (
     <>
     <Notification />
-      {isAuthenticated ? (
+    {isAuthenticated ? (
         <Container fluid="md">
           <Nav className="justify-content-end pt-3 pb-5">
             <Nav.Item>
@@ -46,7 +46,7 @@ const App = function AppWrapper() {
             <Products />
           </main>
         </Container>
-      ) : (
+       ) : (
         <Cover name="Street Food" login={login} coverImg={coverImg} />
       )}
     </>
