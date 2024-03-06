@@ -79,4 +79,4 @@ Otherwise, these changes won't be reflected in IDL's and won't work when called 
 ### Marketplace frontend canister
 `dfx deploy dfinity_js_frontend` - deployes the frontend app for the `dfinity_js_backend` canister on IC.
 # ICP-201-STUDENT
-# ICP-201-STUDENT
+This project simulates a student record dapp, where lecturers can create new student records and update it
