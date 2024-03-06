@@ -30,6 +30,12 @@ const NotificationError = ({ text }) => (
     <span className="text-secondary mx-1">{text}</span>
   </div>
 );
+const NotificationDanger = ({ text }) => (
+  <div style={{display:"flex"}}>
+    <div className="spinner-border text-danger" role="status"><span className=" sr-only"></span></div>
+    <span className="text-secondary mx-1  text-danger">{text}</span>
+  </div>
+);
 
 const Props = {
   text: PropTypes.string,
@@ -42,7 +48,10 @@ const DefaultProps = {
 NotificationSuccess.propTypes = Props;
 NotificationSuccess.defaultProps = DefaultProps;
 
+NotificationDanger.propTypes = Props;
+NotificationDanger.defaultProps = DefaultProps;
+
 NotificationError.propTypes = Props;
 NotificationError.defaultProps = DefaultProps;
 
-export { Notification, NotificationSuccess, NotificationError };
+export { Notification, NotificationSuccess, NotificationError, NotificationDanger };

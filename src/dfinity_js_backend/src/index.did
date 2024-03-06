@@ -1,9 +1,8 @@
 service: () -> {
-    createStudent: (text, text, nat64, nat64) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
-    deleteStudentRecord: (text) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
-    getAllStudents: () -> (variant {Ok:vec record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}}) query;
-    getStudentById: (text) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}}) query;
+    createStudent: (record {cgpa:nat64; name:text; level:nat64; course:text}) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
+    deleteStudentRecord: (text) -> (variant {Ok:text; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
+    getAllStudents: () -> (vec record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}) query;
     getTopStudents: (nat64) -> (variant {Ok:vec record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}}) query;
     updateGrade: (text, record {cgpa:nat64}) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
-    updateStudent: (text, record {cgpa:nat64; name:text; level:nat64; course:text}) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
+    updateStudent: (record {id:text; cgpa:nat64; name:text; level:nat64; course:text}) -> (variant {Ok:record {id:text; cgpa:nat64; name:text; createdAt:nat64; level:nat64; course:text; lecturerId:principal}; Err:variant {UserDoesNotExist:text; CourseDoesNotExist:text}});
 }

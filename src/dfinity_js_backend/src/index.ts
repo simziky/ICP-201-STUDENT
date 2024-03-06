@@ -16,9 +16,18 @@ const Student = Record({
     createdAt: nat64,
     lecturerId: Principal
 });
+// Define the structure of a Student record
+const StudentNew = Record({
+    name: text,
+    course: text,
+    level: nat64,
+    cgpa: nat64,
+  
+});
 
 // Define the payload for updating a Student
 const StudentPayload = Record({
+    id: text,
     name: text,
     course: text,
     level: nat64,
@@ -27,7 +36,7 @@ const StudentPayload = Record({
 
 //Deffine the payload for updating the CGPA
 const CgpaPayload = Record({
-    cgpa: nat64, 
+    cgpa: nat64,
 });
 
 // Define possible error variants
@@ -46,26 +55,14 @@ export default Canister({
      * @param name - Name for the student.
      * @returns the newly created student instance.
      */
-    createStudent: update([text, text, nat64, nat64], Result(Student, Errors), async (name, course, level, cgpa) => {
-        const id = uuidv4();
-
+    createStudent: update([StudentNew], Result(Student, Errors), (payload) => {
         // Validate the course type
-        if (!COURSE_TYPES.includes(course.toLowerCase())) {
-            return Err({ CourseDoesNotExist: `'${course}' is not a viable course, please select one of: ${COURSE_TYPES}` });
-        }
+        if (!COURSE_TYPES.includes(payload.course.toLowerCase())) {
+            return Err({ CourseDoesNotExist: `'${payload.course}' is not a viable course, please select one of: ${COURSE_TYPES}` });
+        } 
 
-        const user = {
-            id,
-            name,
-            course,
-            level,
-            cgpa,
-            createdAt: ic.time(),
-            lecturerId: ic.caller()
-        };
-
-        students.insert(id, user);
-
+        const user = { id: uuidv4(), createdAt: ic.time(), lecturerId: ic.caller(), ...payload };
+        students.insert(user.id, user);
         return Ok(user);
     }),
 
@@ -73,16 +70,12 @@ export default Canister({
      * Retrieve all students.
      * @returns a Result containing a vector of students or an error if no students found.
      */
-    getAllStudents: query([], Result(Vec(Student), Errors), () => {
-        const allStudents = students.values();
+    getAllStudents: query([], (Vec(Student)), () => {
+        return students.values();
 
-        // You can handle the case where there are no students found
-        if (allStudents.length === 0) {
-            return Err({ UserDoesNotExist: 'No students found' });
-        }
-
-        return Ok(allStudents);
     }),
+
+    
 
     /**
      * Update a student record by ID.
@@ -90,55 +83,50 @@ export default Canister({
      * @param payload - Payload containing fields to update.
      * @returns the updated student record or an error if the student is not found or the course is invalid.
      */
-    updateStudent: update([text, StudentPayload], Result(Student, Errors), async (id, payload) => {
-        const studentOpt = students.get(id);
+    updateStudent: update([StudentPayload], Result(Student, Errors), (payload) => {
+        const studentOpt = students.get(payload.id);
+    
+        // Check if the student exists
         if ("None" in studentOpt) {
-            return Err({ UserDoesNotExist: `couldn't update a student with id=${id}. Student not found` });
+            return Err({ UserDoesNotExist: `Student with ID ${payload.id} not found` });
         }
-        const student = studentOpt.Some;
-
+    
         // Validate the course type
         if (payload.course && !COURSE_TYPES.includes(payload.course.toLowerCase())) {
             return Err({ CourseDoesNotExist: `'${payload.course}' is not a viable course, please select one of: ${COURSE_TYPES}` });
         }
-
-        const updatedStudent = student.map((student: any) => ({
+    
+        // Retrieve the existing student record
+        const student = studentOpt.Some;
+    
+        // Create the updated student record
+        const updatedStudent = {
             ...student,
             ...payload,
-            updatedAt: Some(ic.time())
-        }));
-
-        students.insert(id, updatedStudent);
-
+        };
+    
+        // Insert the updated student into the map
+        students.insert(student.id, updatedStudent);
+    
         return Ok(updatedStudent);
     }),
 
-    /**
-     * Retrieve a student record by ID.
-     * @param id - ID of the student.
-     * @returns the student record or an error if the student is not found.
-     */
-    getStudentById: query([text], Result(Student, Errors), (id) => {
-        const studentOpt = students.get(id);
-        if ("None" in studentOpt) {
-            return Err({ UserDoesNotExist: `Student with ID ${id} not found` });
-        }
-        const user = studentOpt.Some;
 
-        return Ok(user);
-    }),
 
     /**
      * Delete a student record by ID.
      * @param id - ID of the student.
      * @returns the deleted instance of the student or an error msg if the student ID doesn't exist.
      */
-    deleteStudentRecord: update([text], Result(Student, Errors), (id) => {
-        const deletedMessage = students.remove(id);
-        if ("None" in deletedMessage) {
+    deleteStudentRecord: update([text], Result(text, Errors), (id) => {
+        //const ticketOpt = student.get(id);
+        const deletedStudent = students.remove(id)
+        if ("None" in deletedStudent) {
             return Err({ UserDoesNotExist: `Couldn't delete a student with id=${id}. Student not found` });
         }
-        return Ok(deletedMessage.Some);
+        //const student = deletedStudent.Some;
+        
+        return Ok(deletedStudent.Some.id);
     }),
 
     // Update the grade of a student identified by ID
@@ -175,3 +163,33 @@ export default Canister({
         return Ok(topStudents);
     }),
 });
+
+/** 
+updateStudent: update([StudentPayload], Result(Student, Errors), (payload) => {
+    const studentOpt = students.get(payload.id);
+
+    // Check if the student exists
+    if ("None" in studentOpt) {
+        return Err({ UserDoesNotExist: `Student with ID ${payload.id} not found` });
+    }
+
+    // Validate the course type
+    if (payload.course && !COURSE_TYPES.includes(payload.course.toLowerCase())) {
+        return Err({ CourseDoesNotExist: `'${payload.course}' is not a viable course, please select one of: ${COURSE_TYPES}` });
+    }
+
+    // Retrieve the existing student record
+    const student = studentOpt.Some;
+
+    // Create the updated student record
+    const updatedStudent = {
+        ...student,
+        ...payload,
+    };
+
+    // Insert the updated student into the map
+    students.insert(student.id, updatedStudent);
+
+    return Ok(updatedStudent);
+}),
+*/

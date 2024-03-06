@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Container, Nav } from "react-bootstrap";
-import Products from "./components/marketplace/StudentList";
+import StudentList from "./components/studentRecord/StudentList";
 import "./App.css";
 import Wallet from "./components/Wallet";
-import coverImg from "./assets/img/sandwich.jpg";
+import coverImg from "./assets/img/icp.jpg";
 import { login, logout as destroy } from "./utils/auth";
 import { balance as principalBalance } from "./utils/ledger"
 import Cover from "./components/utils/Cover";
@@ -43,11 +43,15 @@ const App = function AppWrapper() {
             </Nav.Item>
           </Nav>
           <main>
-            <Products />
+            <StudentList />
           </main>
         </Container>
        ) : (
-        <Cover name="Street Food" login={login} coverImg={coverImg} />
+        <Cover title="Student Records"
+         login={login} 
+         coverImg={coverImg} 
+         subTitle="Records"
+         />
       )}
     </>
   );
